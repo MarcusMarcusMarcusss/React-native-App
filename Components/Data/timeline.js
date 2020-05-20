@@ -6,16 +6,17 @@ import {
   View,
   Text,
   TouchableOpacity,
-  I18nManager
+  I18nManager,
+  Dimensions
 } from "react-native";
-
-const defaultCircleSize = 16;
+const {width,height} = Dimensions.get('window');
+const defaultCircleSize = 18;
 const defaultCircleColor = "#007AFF";
 const defaultLineWidth = 2;
 const defaultLineColor = "#007AFF";
 const defaultTimeTextColor = "black";
 const defaultDotColor = "white";
-const defaultInnerCircle = "none";
+const defaultInnerCircle = "White";
 const isRtl = I18nManager.isRTL;
 
 export default class Timeline extends PureComponent {
@@ -50,7 +51,6 @@ export default class Timeline extends PureComponent {
         data: nextProps.data
       };
     }
-
     return null;
   }
 
@@ -238,29 +238,47 @@ export default class Timeline extends PureComponent {
       </View>
     );
   }
-
+  //Description
   _renderDetail(rowData, rowID) {
     const { isAllowFontScaling } = this.props;
     let description;
+    //console.log(rowData.title);
     if (typeof rowData.description === "string") {
+      if(rowData.time.nextProps==rowData.time){
+
+      }
       description = (
-        <Text
-          style={[
-            styles.description,
-            this.props.descriptionStyle,
-            rowData.descriptionStyle
-          ]}
-          allowFontScaling={isAllowFontScaling}
-        >
-          {rowData.description}
-        </Text>
+        <View style={{width:width/1.2,backgroundColor:"#FFF",borderRadius:10,elevation:7,padding:15}}>
+        
+          <View style={{justifyContent:'space-between',flexDirection:'row'}}>
+            <Text
+            style={[
+              styles.description,
+              this.props.descriptionStyle,
+              rowData.descriptionStyle
+            ]}
+            allowFontScaling={isAllowFontScaling}
+            >
+              {rowData.description}
+            </Text>
+            <Text style={{color:'#000',fontSize:16,opacity:0.4}}
+            >{rowData.dateTime}
+            </Text>
+          </View>
+          <View>
+              <Text style={{color:'#26bf57',fontSize:18,opacity:0.9,marginTop:5}}>Moisture: {rowData.moisture}</Text>
+              <Text style={{color:'#26bf57',fontSize:18,opacity:0.9}}>Temperature: {rowData.temperature}</Text>
+          </View>
+        </View>
+        
       );
     } else if (typeof rowData.description === "object") {
       description = rowData.description;
     }
-
     return (
+      //ViewContainer
       <View style={styles.container}>
+      <View style={{bottom:23}}>
         <Text
           style={[styles.title, this.props.titleStyle, rowData.titleStyle]}
           allowFontScaling={isAllowFontScaling}
@@ -268,6 +286,7 @@ export default class Timeline extends PureComponent {
           {rowData.title}
         </Text>
         {description}
+      </View>
       </View>
     );
   }
@@ -302,7 +321,7 @@ export default class Timeline extends PureComponent {
               right: this.state.width - circleSize / 2 - (lineWidth - 1) / 2
             }
           : {
-              width: this.state.x ? circleSize : 0,
+              width: this.state.x ? circleSize : 120,
               height: this.state.x ? circleSize : 0,
               borderRadius: circleSize / 2,
               backgroundColor: circleColor,
@@ -400,13 +419,14 @@ Timeline.defaultProps = {
   innerCircle: defaultInnerCircle,
   columnFormat: "single-column-left",
   separator: false,
-  showTime: true,
+  showTime: false,
   isAllowFontScaling: true
 };
 
 const styles = StyleSheet.create({
   container: {
-    flex: 1
+    flex: 1,
+    paddingTop:10
   },
   listview: {
     flex: 1
@@ -428,7 +448,7 @@ const styles = StyleSheet.create({
     justifyContent: "center"
   },
   timeContainer: {
-    minWidth: 45
+    minWidth: 75
   },
   time: {
     textAlign: "right",
@@ -436,8 +456,10 @@ const styles = StyleSheet.create({
     overflow: "hidden"
   },
   circle: {
-    width: 16,
-    height: 16,
+    width: 17,
+    height: 10,
+    borderWidth:2.2,
+    borderColor:'#FFF',
     borderRadius: 10,
     zIndex: 1,
     position: "absolute",
@@ -447,12 +469,14 @@ const styles = StyleSheet.create({
   dot: {
     width: 8,
     height: 8,
-    borderRadius: 4,
-    backgroundColor: defaultDotColor
+    borderRadius: 14,
+    backgroundColor: defaultDotColor,
+
   },
   title: {
-    fontSize: 16,
-    fontWeight: "bold"
+    fontSize: 18,
+    fontWeight: "normal",
+    color:'#26bf57'
   },
   details: {
     borderLeftWidth: defaultLineWidth,
@@ -461,7 +485,8 @@ const styles = StyleSheet.create({
   },
   detail: { paddingTop: 10, paddingBottom: 10 },
   description: {
-    marginTop: 10
+    fontSize:16,
+    color:'#FCDB6A',
   },
   separator: {
     height: 1,
